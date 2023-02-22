@@ -5,7 +5,7 @@ const babel = require("gulp-babel");
 const terser = require("gulp-terser-js");
 const concat = require("gulp-concat");
 const browserSync = require("browser-sync").create();
-const scss = require("gulp-sass");
+const scss = require("gulp-sass")(require("sass"));
 const autoprefixer = require("gulp-autoprefixer");
 const cleancss = require("gulp-clean-css");
 const imagemin = require("gulp-imagemin");
@@ -20,16 +20,17 @@ const currentPage = "";
 
 function browsersync() {
   browserSync.init({
-    // Инициализация Browsersync
     server: { baseDir: "src/" },
     browser: ["firefox"],
     notify: false,
     online: true,
+    port: 5000,
   });
 }
 
 function fonts() {
   src("./src/fonts/src/*.ttf").pipe(ttf2woff()).pipe(dest("./src/fonts/dest/"));
+  src("./src/fonts/src/*.ttf").pipe(dest("./src/fonts/dest/"));
   return src("./src/fonts/src/*.ttf")
     .pipe(ttf2woff2())
     .pipe(dest("./src/fonts/dest/"));
@@ -71,7 +72,7 @@ function styles({ dir = `${currentPage}` }) {
   return (
     src(`src/${preprocessor}/` + `${dir}` + `main.${preprocessor}`)
       // .pipe( (preprocessor == 'sass' || preprocessor == 'scss')  &&  eval(preprocessor)({outputStyle: 'compressed'}) || eval(preprocessor)() )
-      .pipe(eval(preprocessor)())
+      .pipe(eval(preprocessor).sync())
       .pipe(concat("all.min.css"))
       .pipe(
         autoprefixer({ overrideBrowserslist: ["last 10 versions"], grid: true })
@@ -127,13 +128,3 @@ exports.default = series(
   images,
   parallel(styles, scriptsProcessing, browsersync, startwatch)
 );
-
-/*
-
-if (process.env.NODE_ENV === 'production') {
-		exports.build = series(transpile, minify);
-	} else {
-		exports.build = series(transpile, livereload);
-	}
-
-*/
