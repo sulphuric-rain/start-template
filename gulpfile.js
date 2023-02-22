@@ -21,7 +21,7 @@ const currentPage = "";
 function browsersync() {
   browserSync.init({
     server: { baseDir: "src/" },
-    browser: ["firefox"],
+    //browser: ["firefox"],
     notify: false,
     online: true,
     port: 5000,
