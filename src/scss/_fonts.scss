@@ -1,0 +1,8 @@
+@import "mixins";
+@include font-face(
+  "Handjet",
+  "../fonts/dest/handjet",
+  400,
+  normal,
+  woff2 woff ttf
+);
